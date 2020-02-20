@@ -61,7 +61,13 @@ void CINTinit_int1e_EnvVars(CINTEnvVars *envs, FINT *ng, FINT *shls,
         envs->g_stride_k = dli * dlj;
         envs->g_size     = dli * dlj;
 }
-
+void CINTinit_int1e_EnvVars_lim(CINTEnvVars *envs, FINT *ng, FINT *shls, FINT *atm, FINT natm, FINT *bas, FINT nbas, double *env, double limits){
+    CINTinit_int1e_EnvVars(envs, ng, shls, atm, natm, bas, nbas, env);
+    for (int k = 0; k < 3; ++k){
+        envs->int_lower[k] = limits[k];
+        envs->int_upper[k] = limits[k+3];
+    }
+}
 void CINTg1e_index_xyz(FINT *idx, CINTEnvVars *envs)
 {
         const FINT i_l = envs->i_l;

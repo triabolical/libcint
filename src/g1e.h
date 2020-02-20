@@ -75,6 +75,8 @@ typedef struct {
         double rkl[3];
         double rklrx[3];
         double akl;
+        double int_lower[3];
+        double int_upper[3];
 } CINTEnvVars;
 #endif
 
@@ -82,6 +84,8 @@ void CINTinit_int1e_EnvVars(CINTEnvVars *envs, FINT *ng, FINT *shls,
                             FINT *atm, FINT natm, FINT *bas, FINT nbas, double *env);
 void CINTinit_int3c1e_EnvVars(CINTEnvVars *envs, FINT *ng, FINT *shls,
                               FINT *atm, FINT natm, FINT *bas, FINT nbas, double *env);
+
+void CINTinit_int1e_EnvVars_lim(CINTEnvVars *envs, FINT *ng, FINT *shls, FINT *atm, FINT natm, FINT *bas, FINT nbas, double *env, double limits);
 
 void CINTg1e_index_xyz(FINT *idx, CINTEnvVars *envs);
 
@@ -119,6 +123,7 @@ void CINTprim_to_ctr_opt(double *gc, FINT nf, double *gp,
                          double *non0coeff, FINT *non0idx, FINT non0ctr);
 
 double CINTcommon_fac_sp(FINT l);
+
 
 #define G1E_D_I(f, g, li, lj, lk)   CINTnabla1i_1e(f, g, li, lj, lk, envs)
 #define G1E_D_J(f, g, li, lj, lk)   CINTnabla1j_1e(f, g, li, lj, lk, envs)
