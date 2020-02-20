@@ -9,6 +9,7 @@
 #include "cint_bas.h"
 #include "optimizer.h"
 #include "g1e.h"
+#include "g1e_lim.h"
 #include "cint1e.h"
 #include "misc.h"
 #include "cart2sph.h"
@@ -312,6 +313,15 @@ FINT CINT1e_spinor_drv(double complex *out, FINT *dims, CINTEnvVars *envs,
         case INT1E_TYPE_RINV:
                 has_value = CINT1e_nuc_loop(gctr, envs, 1, -1, cache);
                 break;
+        case INT1E_TYPE_NUC_LIM:
+                for (n = 0; n < envs->natm; n++) {
+                        if (atm(CHARGE_OF,n) != 0) {
+                                charge_fac = -abs(atm(CHARGE_OF,n));
+                                 has_value = CINT1e_nuc_lim_loop(gctr, envs, charge_fac, n, cache)
+                                        || has_value;
+                        }
+                }
+                break;
         default:
                 for (n = 0; n < envs->natm; n++) {
                         if (atm(CHARGE_OF,n) != 0) {
@@ -320,6 +330,7 @@ FINT CINT1e_spinor_drv(double complex *out, FINT *dims, CINTEnvVars *envs,
                                         || has_value;
                         }
                 }
+                break;
         }
 
         FINT counts[4];
@@ -344,3 +355,110 @@ void int1e_optimizer(CINTOpt **opt, FINT *atm, FINT natm,
         *opt = NULL;
 }
 
+FINT CINT1e_nuc_lim_loop(double *gctr, CINTEnvVars *envs, double fac, FINT nuc_id, double *cache)
+{
+        FINT *shls  = envs->shls;
+        FINT *atm = envs->atm;
+        FINT *bas = envs->bas;
+        double *env = envs->env;
+        FINT i_sh = shls[0];
+        FINT j_sh = shls[1];
+        FINT i_l = envs->i_l;
+        FINT j_l = envs->j_l;
+        FINT i_ctr = envs->x_ctr[0];
+        FINT j_ctr = envs->x_ctr[1];
+        FINT i_prim = bas(NPRIM_OF, i_sh);
+        FINT j_prim = bas(NPRIM_OF, j_sh);
+        FINT nf = envs->nf;
+        FINT n_comp = envs->ncomp_e1 * envs->ncomp_tensor;
+        double *ri = envs->ri;
+        double *rj = envs->rj;
+        double *ai = env + bas(PTR_EXP, i_sh);
+        double *aj = env + bas(PTR_EXP, j_sh);
+        double *ci = env + bas(PTR_COEFF, i_sh);
+        double *cj = env + bas(PTR_COEFF, j_sh);
+        FINT ip, jp, n, k;
+        FINT has_value = 0;
+        double *cr;
+        FINT *idx = malloc(sizeof(FINT) * nf * 3);
+        double rij[3], aij, dij, eij, rrij;
+        double *g, *gout, *gctri;
+        MALLOC_INSTACK(g, double, envs->g_size * 3 * ((1<<envs->gbits)+1)); // +1 as buffer
+        MALLOC_INSTACK(gout, double, nf * n_comp);
+        MALLOC_INSTACK(gctri, double, nf * i_ctr * n_comp);
+
+        if (nuc_id < 0) {
+                cr = &env[PTR_RINV_ORIG];
+        } else {
+                cr = &env[atm(PTR_COORD, nuc_id)];
+        }
+
+        CINTg1e_index_xyz(idx, envs);
+
+        rrij = CINTsquare_dist(ri, rj);
+        fac *= envs->common_factor * CINTcommon_fac_sp(i_l) * CINTcommon_fac_sp(j_l);
+        
+        FINT nterms = 0;
+        double wei[10000];
+        double pp[10000];
+        double ak;
+        
+        for (jp = 0; jp < j_prim; jp++) {
+                envs->aj = aj[jp];
+                n = nf * i_ctr * n_comp;
+                CINTdset0(n, gctri);
+                for (ip = 0; ip < i_prim; ip++) {
+                    
+                        envs->ai = ai[ip];
+                        aij = ai[ip] + aj[jp];
+                        eij = (ai[ip] * aj[jp] / aij) * rrij;
+                    
+                        if (eij > EXPCUTOFF)
+                            continue;
+                        
+                        has_value = 1;
+                    
+                        rij[0] = (ai[ip] * ri[0] + aj[jp] * rj[0]) / aij;
+                        rij[1] = (ai[ip] * ri[1] + aj[jp] * rj[1]) / aij;
+                        rij[2] = (ai[ip] * ri[2] + aj[jp] * rj[2]) / aij;
+                    
+                        for (k = 0; k < nterms; ++k){
+                            dij = exp(-eij) / aij * fac * wei[k];
+                            ak = pp[k];
+                            CINTg_nuc_all(g, aij, rij, cr, ak, dij*fac, envs);
+                            (*envs->f_gout)(gout, g, idx, envs, 1);
+                        }
+                    
+                    /*
+                        aij = ai[ip] + aj[jp];
+                        eij = (ai[ip] * aj[jp] / aij) * rrij;
+                        if (eij > EXPCUTOFF)
+                                continue;
+                        has_value = 1;
+
+                        rij[0] = (ai[ip] * ri[0] + aj[jp] * rj[0]) / aij;
+                        rij[1] = (ai[ip] * ri[1] + aj[jp] * rj[1]) / aij;
+                        rij[2] = (ai[ip] * ri[2] + aj[jp] * rj[2]) / aij;
+                        tau = CINTnuc_mod(aij, nuc_id, atm, env);
+                        x = aij * CINTsquare_dist(rij, cr) * tau * tau;
+                        CINTrys_roots(envs->nrys_roots, x, u, w);
+
+                        dij = exp(-eij) / aij * fac;
+                        CINTdset0(nf * n_comp, gout);
+                        for (i = 0; i < envs->nrys_roots; i++) {
+                                t2 = u[i] / (1 + u[i]) * tau * tau;
+                                CINTg_nuc(g, aij, rij, cr, t2,
+                                          dij * w[i] * tau, envs);
+
+                                (*envs->f_gout)(gout, g, idx, envs, 1);
+                        }
+                    */
+                        n = nf * n_comp;
+                        CINTprim_to_ctr(gctri, n, gout, 1, i_prim, i_ctr, ci+ip);
+                }
+                n = nf * i_ctr;
+                CINTprim_to_ctr(gctr, n, gctri, n_comp, j_prim, j_ctr, cj+jp);
+        }
+        free(idx);
+        return has_value;
+}
