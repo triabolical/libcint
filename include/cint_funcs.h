@@ -12,6 +12,9 @@ typedef void (*CINTOptimizerFunction)(CINTOpt **opt,
 typedef FINT (*CINTIntegralFunction)(double *out, FINT *dims, FINT *shls,
                                      FINT *atm, FINT natm, FINT *bas, FINT nbas, double *env,
                                      CINTOpt *opt, double *cache);
+
+int1e_nuc_lim(double *out, FINT *dims, FINT *shls, FINT *atm, FINT natm, FINT *bas, FINT nbas, double *env, CINTOpt *opt, double *cache, double* lim, double* scv);
+
 /* Plain ERI (ij|kl) */
 CINTOptimizerFunction int2e_optimizer;
 CINTIntegralFunction int2e_cart;
