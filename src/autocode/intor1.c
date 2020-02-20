@@ -87,7 +87,16 @@ CINTEnvVars envs;
 CINTinit_int1e_EnvVars(&envs, ng, shls, atm, natm, bas, nbas, env);
 envs.f_gout = &CINTgout1e_int1e_nuc;
 return CINT1e_drv(out, dims, &envs, cache, &c2s_sph_1e, 2);
-} // int1e_nuc_sph
+}
+FINT int1e_nuc_lim(double *out, FINT *dims, FINT *shls,
+FINT *atm, FINT natm, FINT *bas, FINT nbas, double *env, CINTOpt *opt, double *cache, double* lim, double* scv) {
+FINT ng[] = {0, 0, 0, 0, 0, 1, 0, 1};
+CINTEnvVars envs;
+CINTinit_int1e_EnvVars_lim(&envs, ng, shls, atm, natm, bas, nbas, env, lim, scv);
+envs.f_gout = &CINTgout1e_int1e_nuc;
+return CINT1e_drv(out, dims, &envs, cache, &c2s_sph_1e, 2);
+}
+// int1e_nuc_sph
 FINT int1e_nuc_spinor(double complex *out, FINT *dims, FINT *shls,
 FINT *atm, FINT natm, FINT *bas, FINT nbas, double *env, CINTOpt *opt, double *cache) {
 FINT ng[] = {0, 0, 0, 0, 0, 1, 0, 1};
