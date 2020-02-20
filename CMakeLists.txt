@@ -37,6 +37,7 @@ check_function_exists(sqrtl HAVE_SQRTL)
 #set(CMAKE_REQUIRED_LIBRARIES quadmath)
 #check_function_exists(fabsq HAVE_QUADMATH_H)
 
+add_library(exprep SHARED doptpoisson.f desterr.f doptr3.f desterr3.f doptr2.f desterr2.f apprf.f dlaguerre.f dprony.f doptbshelm3.f90 )
 include_directories(
   ${PROJECT_BINARY_DIR}/include
   ${PROJECT_SOURCE_DIR}/src
@@ -53,6 +54,7 @@ configure_file(
 set(cintSrc 
   src/c2f.c src/cart2sph.c src/cint1e.c src/cint2e.c src/cint_bas.c
   src/fblas.c src/g1e.c src/g2e.c src/misc.c src/optimizer.c
+  src/g1e_lim.c
   src/rys_roots.c
   src/cint2c2e.c src/g2c2e.c src/cint3c2e.c src/g3c2e.c
   src/cint3c1e.c src/g3c1e.c src/breit.c src/cint4c1e.c src/g4c1e.c
