@@ -5,6 +5,7 @@
 
 #include <complex.h>
 #include "config.h"
+#include "exprep.h"
 
 FINT CINT1e_loop(double *gctr, CINTEnvVars *envs, double *cache);
 

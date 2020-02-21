@@ -7,12 +7,12 @@
 
 #include "g1e_lim.h"
 
-void SCsum3D(double * abc, double * Pij, double * cr, double aijk, double* v, double fac, int& nt){
+void SCsum3D(double * abc, double * Pij, double * cr, double aijk, double* v, double fac, int* nt){
     int n[3] = {0, 0, 0}, k, q;
     double Rn[3];
     double eij, r2;
     nt = 0;
-    
+    int N = 0;
     for ( n[2] = -3 ; n[2] <= 3; ++n[2]){
         for (n[1] = -3; n[1] <= 3; ++n[1]){
             for (n[0] = -3; n[0] <= 3; ++n[0]){
@@ -23,18 +23,20 @@ void SCsum3D(double * abc, double * Pij, double * cr, double aijk, double* v, do
                 }
                 eij = exp(-aijk* CINTsquare_dist(Pij, Rn) ) * fac;
                 if (eij > EXPCUTOFF){
-                    for (k = 0; k < 3; ++k) v[3*nt+k] = Rn[k];
-                    ++nt;
+                    for (k = 0; k < 3; ++k) v[3*N+k] = Rn[k];
+		    v[3*N+3] = eij;
+                    ++N;
                 }
             }
         }
     }
+    *nt = N;
 }
-void SCsum2D(double * abc, double * Pij, double * cr, double aijk, double* v, double fac, int& nt){
+void SCsum2D(double * abc, double * Pij, double * cr, double aijk, double* v, double fac, int* nt){
     int n[3] = {0, 0, 0}, k, q;
     double Rn[3];
     double eij, r2;
-    nt = 0;
+    int N = 0;
     for ( n[2] = 0; n[2] <= 0; ++n[2]){
         for (n[1] = -3; n[1] <= 3; ++n[1]){
             for (n[0] = -3; n[0] <= 3; ++n[0]){
@@ -45,19 +47,20 @@ void SCsum2D(double * abc, double * Pij, double * cr, double aijk, double* v, do
                 }
                 eij = exp(-aijk* CINTsquare_dist(Pij, Rn) ) * fac;
                 if (eij > EXPCUTOFF){
-                    for (k = 0; k < 3; ++k) v[3*n+k] = Rn[k];
-                    v[3*nt+3] = eij;
-                    ++nt;
+                    for (k = 0; k < 3; ++k) v[3*N+k] = Rn[k];
+                    v[3*N+3] = eij;
+                    ++N;
                 }
             }
         }
     }
+    *nt = N;
 }
-void CINTg_nuc_all(double *g, double aij, double *Pij, double *cr, double ak, double aij, double fac, CINTEnvVars *envs){
+void CINTg_nuc_all(double *g, double aij, double *Pij, double *cr, double ak, double fac, CINTEnvVars *envs){
     // fac = exp[-ai*aj/aij*Rij^2]*Ck
     double v[4*7*7*7];
     int gsize = envs->g_size * 3 * ((1<<envs->gbits)+1);
-    double* gtemp = MALLOC_INSTACK(g, double, gsize);
+    double* gtemp = malloc(sizeof(double)*gsize);
 
     int nterms = 0, k;
     double z = 0;
@@ -67,9 +70,9 @@ void CINTg_nuc_all(double *g, double aij, double *Pij, double *cr, double ak, do
     for (k = 0; k < 3; ++k) z += envs->abc[2+k*3];
 
     if (z == 0 )
-        SCsum2D(envs->abc, Pij, cr, aijk, v, fac, nterms);
+        SCsum2D(envs->abc, Pij, cr, aijk, v, fac, &nterms);
     else
-        SCsum3D(envs->abc, Pij, cr, aijk, v, fac, nterms);
+        SCsum3D(envs->abc, Pij, cr, aijk, v, fac, &nterms);
     
     for (k = 0; k < gsize; ++k) gtemp[k] =0;
     
@@ -78,7 +81,7 @@ void CINTg_nuc_all(double *g, double aij, double *Pij, double *cr, double ak, do
         for (k = 0; k < 3; ++k)
             Rcn[k] = cr[k] + v[3*n+k];
         
-        CINTg_nuc_near(gtemp, aij, Pij, Rcn, ak, v[3*n+3], envs);
+        CINTg_nuc_lim(gtemp, aij, Pij, Rcn, ak, v[3*n+3], envs);
         
         for (k = 0; k < gsize; ++k)
             g[k] += gtemp[k];

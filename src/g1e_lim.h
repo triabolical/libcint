@@ -19,12 +19,14 @@
 #include "g1e.h"
 #include "cint_const.h"
 #include <math.h>
+#include "cint_bas.h"
+#include "misc.h"
 
-void SCsum3D(double * abc, double * Pij, double * cr, double aijk, double* v, double fac, int& nt);
-void SCsum2D(double * abc, double * Pij, double * cr, double aijk, double* v, double fac, int& nt);
+void SCsum3D(double * abc, double * Pij, double * cr, double aijk, double* v, double fac, int* nt);
+void SCsum2D(double * abc, double * Pij, double * cr, double aijk, double* v, double fac, int* nt);
 
-void CINTg_nuc_all(double *g, double aij, double *rij, double *cr, double t2, double fac, CINTEnvVars *envs);
-void CINTg_nuc_lim(double *g, double aij, double *rij, double *cr, double t2, double fac, CINTEnvVars *envs);
+void CINTg_nuc_all(double *g, double aij, double *rij, double *cr, double ak, double fac, CINTEnvVars *envs);
+void CINTg_nuc_lim(double *g, double aij, double *rij, double *cr, double ak, double fac, CINTEnvVars *envs);
 
 
 #endif /* g1e_lim_h */

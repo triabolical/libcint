@@ -77,6 +77,8 @@ typedef struct {
         double akl;
         double int_lower[3];
         double int_upper[3];
+  double abc[9];
+  
 } CINTEnvVars;
 #endif
 
@@ -85,7 +87,7 @@ void CINTinit_int1e_EnvVars(CINTEnvVars *envs, FINT *ng, FINT *shls,
 void CINTinit_int3c1e_EnvVars(CINTEnvVars *envs, FINT *ng, FINT *shls,
                               FINT *atm, FINT natm, FINT *bas, FINT nbas, double *env);
 
-void CINTinit_int1e_EnvVars_lim(CINTEnvVars *envs, FINT *ng, FINT *shls, FINT *atm, FINT natm, FINT *bas, FINT nbas, double *env, double limits);
+void CINTinit_int1e_EnvVars_lim(CINTEnvVars *envs, FINT *ng, FINT *shls, FINT *atm, FINT natm, FINT *bas, FINT nbas, double *env, double *limits, double* scv);
 
 void CINTg1e_index_xyz(FINT *idx, CINTEnvVars *envs);
 

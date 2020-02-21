@@ -245,6 +245,15 @@ FINT CINT1e_drv(double *out, FINT *dims, CINTEnvVars *envs,
         case INT1E_TYPE_RINV:
                 has_value = CINT1e_nuc_loop(gctr, envs, 1, -1, cache);
                 break;
+        case INT1E_TYPE_NUC_LIM:
+	  for (n = 0; n < envs->natm; n++) {
+	    if (atm(CHARGE_OF,n) != 0) {
+	      charge_fac = -abs(atm(CHARGE_OF,n));
+	      has_value = CINT1e_nuc_lim_loop(gctr, envs, charge_fac, n, cache)
+		|| has_value;
+	    }
+	  }
+	  break;
         default:
                 for (n = 0; n < envs->natm; n++) {
                         if (atm(NUC_MOD_OF,n) == FRAC_CHARGE_NUC) {
@@ -402,7 +411,10 @@ FINT CINT1e_nuc_lim_loop(double *gctr, CINTEnvVars *envs, double fac, FINT nuc_i
         double wei[10000];
         double pp[10000];
         double ak;
-        
+	FINT dim = 3;
+	double acc = 1E-9;
+	double near = 1E-8;
+	doptpoisson_(&dim, &acc, &near, &rrij, &nterms, pp, wei);  
         for (jp = 0; jp < j_prim; jp++) {
                 envs->aj = aj[jp];
                 n = nf * i_ctr * n_comp;
