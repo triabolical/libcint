@@ -61,13 +61,21 @@ void CINTinit_int1e_EnvVars(CINTEnvVars *envs, FINT *ng, FINT *shls,
         envs->g_stride_k = dli * dlj;
         envs->g_size     = dli * dlj;
 }
+<<<<<<< HEAD
+void CINTinit_int1e_EnvVars_lim(CINTEnvVars *envs, FINT *ng, FINT *shls, FINT *atm, FINT natm, FINT *bas, FINT nbas, double *env, double* limits, double* scv){
+=======
 void CINTinit_int1e_EnvVars_lim(CINTEnvVars *envs, FINT *ng, FINT *shls, FINT *atm, FINT natm, FINT *bas, FINT nbas, double *env, double *limits, double* scv){
+>>>>>>> b9852b19f32ccf36771858f12db6458d5202289b
     CINTinit_int1e_EnvVars(envs, ng, shls, atm, natm, bas, nbas, env);
     for (int k = 0; k < 3; ++k){
         envs->int_lower[k] = limits[k];
         envs->int_upper[k] = limits[k+3];
     }
+<<<<<<< HEAD
+    for (int k = 0; k < 9; ++k) envs->abc[k] = scv[k];
+=======
     for (FINT k = 0; k < 9; ++k) envs->abc[k] = scv[k];
+>>>>>>> b9852b19f32ccf36771858f12db6458d5202289b
 }
 void CINTg1e_index_xyz(FINT *idx, CINTEnvVars *envs)
 {

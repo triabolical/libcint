@@ -53,7 +53,11 @@ FINT CINT1e_loop(double *gctr, CINTEnvVars *envs, double *cache)
 
         rrij = CINTsquare_dist(ri, rj);
         double fac = envs->common_factor * CINTcommon_fac_sp(i_l) * CINTcommon_fac_sp(j_l);
-
+        FINT nterms = 0, q;
+        double wei[10000];
+        double pp[10000];
+        double aijk;
+    
         for (jp = 0; jp < j_prim; jp++) {
                 envs->aj = aj[jp];
                 n = nf * i_ctr * n_comp;
@@ -61,9 +65,14 @@ FINT CINT1e_loop(double *gctr, CINTEnvVars *envs, double *cache)
                 for (ip = 0; ip < i_prim; ip++) {
                         envs->ai = ai[ip];
                         aij = ai[ip] + aj[jp];
+                    for (q = 0; q < nterms; ++q){
+                        aijk = aij + pp[q];
+                        
+                        
+                        
+                    }
                         eij = (ai[ip] * aj[jp] / aij) * rrij;
-                        if (eij > EXPCUTOFF)
-                                continue;
+                        if (eij > EXPCUTOFF) continue;
                         has_value = 1;
 
                         dij = exp(-eij) / (aij * sqrt(aij)) * fac;

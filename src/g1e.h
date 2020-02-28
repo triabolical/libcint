@@ -15,7 +15,7 @@ typedef struct {
         FINT *shls;
         FINT natm;
         FINT nbas;
-
+    
         FINT i_l;
         FINT j_l;
         FINT k_l;
@@ -77,24 +77,31 @@ typedef struct {
         double akl;
         double int_lower[3];
         double int_upper[3];
+<<<<<<< HEAD
+        double abc[9];
+    
+=======
   double abc[9];
   
+>>>>>>> b9852b19f32ccf36771858f12db6458d5202289b
 } CINTEnvVars;
 #endif
 
 void CINTinit_int1e_EnvVars(CINTEnvVars *envs, FINT *ng, FINT *shls,
                             FINT *atm, FINT natm, FINT *bas, FINT nbas, double *env);
-void CINTinit_int3c1e_EnvVars(CINTEnvVars *envs, FINT *ng, FINT *shls,
-                              FINT *atm, FINT natm, FINT *bas, FINT nbas, double *env);
+void CINTinit_int3c1e_EnvVars(CINTEnvVars *envs, FINT *ng, FINT *shls, FINT *atm, FINT natm, FINT *bas, FINT nbas, double *env);
 
+<<<<<<< HEAD
+void CINTinit_int1e_EnvVars_lim(CINTEnvVars *envs, FINT *ng, FINT *shls, FINT *atm, FINT natm, FINT *bas, FINT nbas, double *env, double* limits, double* scv);
+=======
 void CINTinit_int1e_EnvVars_lim(CINTEnvVars *envs, FINT *ng, FINT *shls, FINT *atm, FINT natm, FINT *bas, FINT nbas, double *env, double *limits, double* scv);
+>>>>>>> b9852b19f32ccf36771858f12db6458d5202289b
 
 void CINTg1e_index_xyz(FINT *idx, CINTEnvVars *envs);
 
 void CINTg_ovlp(double *g, double ai, double aj, double fac, CINTEnvVars *envs);
 
-void CINTg_nuc(double *g, double aij, double *rij,
-               double *cr, double t2, double fac, CINTEnvVars *envs);
+void CINTg_nuc(double *g, double aij, double *rij, double *cr, double t2, double fac, CINTEnvVars *envs);
 
 void CINTnabla1i_1e(double *f, double *g,
                     FINT li, FINT lj, FINT lk, CINTEnvVars *envs);

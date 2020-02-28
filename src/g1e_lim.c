@@ -149,3 +149,9 @@ void CINTg_nuc_lim(double *g, double aij, double *Pij, double *cr, double ak, do
         }
     }
 }
+void CINTg_nuc_far(double *g, double aij, double *rij, double *cr, double ck, double fac, CINTEnvVars *envs){
+    
+    
+    
+    
+}

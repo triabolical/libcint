@@ -28,5 +28,7 @@ void SCsum2D(double * abc, double * Pij, double * cr, double aijk, double* v, do
 void CINTg_nuc_all(double *g, double aij, double *rij, double *cr, double ak, double fac, CINTEnvVars *envs);
 void CINTg_nuc_lim(double *g, double aij, double *rij, double *cr, double ak, double fac, CINTEnvVars *envs);
 
+void CINTg_nuc_far(double *g, double aij, double *rij, double *cr, double ck, double fac, CINTEnvVars *envs);
+
 
 #endif /* g1e_lim_h */
