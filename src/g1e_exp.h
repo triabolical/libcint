@@ -23,5 +23,5 @@
 #include <complex.h>
 
 void CINTg_nuc_exp(double *g, double* rij, double* cr, double aij, double ak, double fac, CINTEnvVars *envs);
-FINT num_kterms(double ak, double wk, double epsilion = 1E-10);
+FINT num_kterms(double ak, double wk, double epsilion);
 #endif /* g1e_exp_h */
