@@ -6,7 +6,7 @@
 //
 
 #include "g1e_lim.h"
-
+/*
 void SCsum3D(double * abc, double * Pij, double * cr, double aijk, double* v, double fac, int* nt){
     int n[3] = {0, 0, 0}, k, q;
     double Rn[3];
@@ -155,3 +155,4 @@ void CINTg_nuc_far(double *g, double aij, double *rij, double *cr, double ck, do
     
     
 }
+*/

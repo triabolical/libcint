@@ -37,7 +37,6 @@ check_function_exists(sqrtl HAVE_SQRTL)
 #set(CMAKE_REQUIRED_LIBRARIES quadmath)
 #check_function_exists(fabsq HAVE_QUADMATH_H)
 
-add_library(exprep SHARED doptpoisson.f desterr.f doptr3.f desterr3.f doptr2.f desterr2.f apprf.f dlaguerre.f dprony.f doptbshelm3.f90 )
 include_directories(
   ${PROJECT_BINARY_DIR}/include
   ${PROJECT_SOURCE_DIR}/src
@@ -112,7 +111,7 @@ if(QUADMATH_FOUND)
   target_link_libraries(cint quadmath)
 endif()
 target_link_libraries(cint "-lm")
-
+target_link_libraries(cint /projects/trle6356/gaussians/libs/libexprep.a)
 install(TARGETS cint DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR})
 set(CintHeaders
   ${PROJECT_SOURCE_DIR}/include/cint_funcs.h
