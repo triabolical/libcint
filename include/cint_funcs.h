@@ -13,8 +13,6 @@ typedef FINT (*CINTIntegralFunction)(double *out, FINT *dims, FINT *shls,
                                      FINT *atm, FINT natm, FINT *bas, FINT nbas, double *env,
                                      CINTOpt *opt, double *cache);
 
-int1e_nuc_lim(double *out, FINT *dims, FINT *shls, FINT *atm, FINT natm, FINT *bas, FINT nbas, double *env, CINTOpt *opt, double *cache, double* lim, double* scv);
-
 /* Plain ERI (ij|kl) */
 CINTOptimizerFunction int2e_optimizer;
 CINTIntegralFunction int2e_cart;
@@ -32,6 +30,7 @@ CINTOptimizerFunction int1e_nuc_optimizer;
 CINTIntegralFunction int1e_nuc_cart;
 CINTIntegralFunction int1e_nuc_sph;
 CINTIntegralFunction int1e_nuc_spinor;
+CINTIntegralFunction int1e_nuc_exp;
 
 /* <i|OVLP |P DOT P j> */
 CINTOptimizerFunction int1e_kin_optimizer;
