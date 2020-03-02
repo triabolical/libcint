@@ -26,9 +26,9 @@ FINT CINT3c1e_cart_drv(double *out, FINT *dims, CINTEnvVars *envs, CINTOpt *opt,
                       double *cache, FINT int_type);
 FINT CINT3c1e_spinor_drv(double complex *out, FINT *dims, CINTEnvVars *envs, CINTOpt *opt,
                         double *cache, void (*f_e1_c2s)(), FINT int_type, FINT is_ssc);
-FINT CINT1e_nuc_lim_loop(double *gctr, CINTEnvVars *envs, double fac, FINT nuc_id, double *cache);
+FINT CINT1e_nuc_exp_loop(double *gctr, CINTEnvVars *envs, double fac, FINT nuc_id, double *cache);
 #define INT1E_TYPE_OVLP 0
 #define INT1E_TYPE_RINV 1
 #define INT1E_TYPE_NUC  2
-#define INT1E_TYPE_NUC_LIM 3
+#define INT1E_TYPE_NUC_EXP 3
 
