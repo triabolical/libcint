@@ -75,27 +75,12 @@ typedef struct {
         double rkl[3];
         double rklrx[3];
         double akl;
-        double int_lower[3];
-        double int_upper[3];
-<<<<<<< HEAD
-        double abc[9];
-    
-=======
-  double abc[9];
-  
->>>>>>> b9852b19f32ccf36771858f12db6458d5202289b
 } CINTEnvVars;
 #endif
 
 void CINTinit_int1e_EnvVars(CINTEnvVars *envs, FINT *ng, FINT *shls,
                             FINT *atm, FINT natm, FINT *bas, FINT nbas, double *env);
 void CINTinit_int3c1e_EnvVars(CINTEnvVars *envs, FINT *ng, FINT *shls, FINT *atm, FINT natm, FINT *bas, FINT nbas, double *env);
-
-<<<<<<< HEAD
-void CINTinit_int1e_EnvVars_lim(CINTEnvVars *envs, FINT *ng, FINT *shls, FINT *atm, FINT natm, FINT *bas, FINT nbas, double *env, double* limits, double* scv);
-=======
-void CINTinit_int1e_EnvVars_lim(CINTEnvVars *envs, FINT *ng, FINT *shls, FINT *atm, FINT natm, FINT *bas, FINT nbas, double *env, double *limits, double* scv);
->>>>>>> b9852b19f32ccf36771858f12db6458d5202289b
 
 void CINTg1e_index_xyz(FINT *idx, CINTEnvVars *envs);
 
